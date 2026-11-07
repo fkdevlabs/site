@@ -13,7 +13,11 @@ const path = Astro.url.pathname;
   <div class="container header__inner">
     <Logo />
     <button class="header__toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Meny">
-      <span></span><span></span>
+      <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+        <line x1="5" y1="7" x2="19" y2="7" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+        <line x1="5" y1="17" x2="19" y2="17" />
+      </svg>
     </button>
     <nav id="site-nav" class="header__nav">
       <ul>
@@ -40,7 +44,10 @@ const path = Astro.url.pathname;
 </script>
 
 <style>
-  .header { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--c-bg) 88%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--c-border); }
+  /* Blur ligger på ::before – backdrop-filter direkt på .header skulle göra den till
+     containing block för den fixed-positionerade mobilmenyn, som då inte täcker skärmen. */
+  .header { position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--c-border); }
+  .header::before { content: ''; position: absolute; inset: 0; z-index: -1; background: color-mix(in srgb, var(--c-bg) 88%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   .header__inner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-height: 72px; }
   .header__nav { display: flex; align-items: center; gap: 2rem; }
   .header__nav ul { display: flex; gap: 1.75rem; list-style: none; margin: 0; padding: 0; }
@@ -52,12 +59,24 @@ const path = Astro.url.pathname;
 
   @media (max-width: 880px) {
     .header__toggle {
-      display: grid; place-content: center; gap: 6px; width: 44px; height: 44px; border-radius: 50%;
-      border: 1px solid var(--c-border); background: var(--c-paper); cursor: pointer;
+      display: grid; place-items: center;
+      width: 44px; height: 44px; padding: 0; border-radius: 50%;
+      border: 1px solid var(--c-border); background: var(--c-paper); color: var(--c-ink); cursor: pointer;
     }
-    .header__toggle span { display: block; width: 18px; height: 1.5px; background: var(--c-ink); transition: transform .2s; }
-    .is-open .header__toggle span:first-child { transform: translateY(3.75px) rotate(45deg); }
-    .is-open .header__toggle span:last-child { transform: translateY(-3.75px) rotate(-45deg); }
+    /* SVG i stället för spans: strecken kantutjämnas i stället för att avrundas till
+       hela skärmpixlar, så alla tre blir lika tjocka även på mobiler med t.ex. 2.625x-skärm. */
+    .header__toggle svg { display: block; overflow: visible; }
+    .header__toggle line {
+      stroke: currentColor; stroke-width: 2; stroke-linecap: round;
+      transform-box: fill-box; transform-origin: center;
+      /* Stänger: vrid tillbaka först, glid sedan isär */
+      transition: rotate .18s ease, translate .18s ease .18s, scale .18s ease .18s, opacity .18s ease .18s;
+    }
+    /* Öppnar: alla tre glider ihop till mitten, sedan vrids de till ett kryss och mitten krymper bort */
+    .is-open .header__toggle line { transition: translate .18s ease, rotate .18s ease .18s, scale .18s ease .18s, opacity .18s ease .18s; }
+    .is-open .header__toggle line:nth-child(1) { translate: 0 5px; rotate: 45deg; }
+    .is-open .header__toggle line:nth-child(2) { scale: 0 1; opacity: 0; transition: scale .18s ease, opacity .18s ease; }
+    .is-open .header__toggle line:nth-child(3) { translate: 0 -5px; rotate: -45deg; }
     .header__nav {
       position: fixed; inset: 73px 0 0; background: var(--c-bg); flex-direction: column; align-items: stretch;
       padding: 1.5rem 1.25rem 2rem; gap: 2rem; opacity: 0; visibility: hidden; transition: opacity .2s, visibility .2s;
