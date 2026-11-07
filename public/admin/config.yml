@@ -1,0 +1,142 @@
+# Decap CMS – https://decapcms.org/docs/configuration-options/
+backend:
+  name: git-gateway
+  branch: main
+
+# Lokal redigering: kör `npm run cms` och `npm run dev`, öppna http://localhost:4321/admin/
+local_backend: true
+
+locale: sv
+site_url: https://fkdevlab.netlify.app
+display_url: https://fkdevlab.netlify.app
+publish_mode: editorial_workflow # lokalt (localhost) används 'simple', se src/pages/admin/index.astro
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: paket
+    label: Paket & priser
+    label_singular: Paket
+    folder: src/content/paket
+    create: true
+    slug: "{{slug}}"
+    extension: md
+    format: frontmatter
+    sortable_fields: [order, title, price]
+    summary: "{{title}} – {{price}} kr"
+    fields:
+      - { name: title, label: Paketnamn, widget: string }
+      - { name: tagline, label: Kort beskrivning, widget: string, hint: "En mening om vem paketet passar" }
+      - { name: pricePrefix, label: "Text före pris", widget: string, required: false, hint: "t.ex. från" }
+      - { name: price, label: "Pris (kr)", widget: number, value_type: int }
+      - { name: priceSuffix, label: "Text efter pris", widget: string, default: "exkl. moms" }
+      - { name: monthly, label: "Månadskostnad drift (kr/mån)", widget: number, value_type: int, required: false }
+      - { name: delivery, label: Leveranstid, widget: string, required: false, hint: "t.ex. 2–3 veckor" }
+      - { name: features, label: Ingår, widget: list, field: { name: feature, label: Punkt, widget: string } }
+      - { name: popular, label: "Markera som populärast", widget: boolean, default: false }
+      - { name: buttonText, label: Knapptext, widget: string, default: "Beställ" }
+      - { name: order, label: Sorteringsordning, widget: number, value_type: int, default: 100, hint: "Lägre nummer visas först" }
+      - { name: body, label: "Mer om paketet (visas på paketsidan)", widget: markdown, required: false }
+
+  - name: arbeten
+    label: Kundcase
+    label_singular: Kundcase
+    folder: src/content/arbeten
+    create: true
+    slug: "{{slug}}"
+    extension: md
+    format: frontmatter
+    sortable_fields: [order, title, year]
+    summary: "{{client}} – {{year}}"
+    fields:
+      - { name: title, label: Rubrik, widget: string, hint: "t.ex. Ny sajt som ger fler offertförfrågningar" }
+      - { name: client, label: Kund, widget: string }
+      - { name: industry, label: Bransch, widget: string }
+      - { name: year, label: År, widget: number, value_type: int }
+      - { name: url, label: "Länk till sajten", widget: string, required: false }
+      - { name: image, label: Skärmdump, widget: image, required: false, hint: "Liggande bild, gärna 1600×1000 px" }
+      - { name: excerpt, label: Kort beskrivning, widget: text }
+      - { name: tags, label: "Vad vi gjorde", widget: list, field: { name: tag, label: Tagg, widget: string }, required: false }
+      - name: results
+        label: Resultat
+        widget: list
+        required: false
+        max: 3
+        fields:
+          - { name: value, label: Värde, widget: string, hint: "t.ex. +140 %" }
+          - { name: label, label: Beskrivning, widget: string }
+      - { name: quote, label: Citat från kunden, widget: text, required: false }
+      - { name: quoteBy, label: Citat av, widget: string, required: false, hint: "Namn, roll" }
+      - { name: featured, label: Visa på startsidan, widget: boolean, default: true }
+      - { name: order, label: Sorteringsordning, widget: number, value_type: int, default: 100 }
+      - { name: body, label: Berättelsen, widget: markdown }
+
+  - name: settings
+    label: Inställningar
+    files:
+      - name: site
+        label: Företag & startsida
+        file: src/data/settings.json
+        fields:
+          - { name: companyName, label: Företagsnamn, widget: string }
+          - { name: tagline, label: Slogan, widget: string }
+          - { name: phone, label: Telefon, widget: string }
+          - { name: email, label: E-post, widget: string }
+          - { name: city, label: Ort, widget: string }
+          - { name: orgNumber, label: Organisationsnummer, widget: string }
+          - name: hero
+            label: Startsida – toppsektion
+            widget: object
+            fields:
+              - { name: eyebrow, label: "Liten text ovanför rubriken", widget: string, required: false }
+              - { name: title, label: Rubrik, widget: string }
+              - { name: highlight, label: "Markerad del av rubriken", widget: string, required: false, hint: "Måste finnas ordagrant i rubriken, visas kursivt i accentfärg" }
+              - { name: text, label: Text, widget: text }
+              - { name: buttonText, label: Knapptext, widget: string }
+          - name: stats
+            label: Siffror
+            widget: list
+            max: 4
+            fields:
+              - { name: value, label: Värde, widget: string }
+              - { name: label, label: Beskrivning, widget: string }
+          - name: services
+            label: Tjänster
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { name: title, label: Rubrik, widget: string }
+              - { name: text, label: Text, widget: text }
+          - name: steps
+            label: "Så går det till"
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { name: title, label: Rubrik, widget: string }
+              - { name: text, label: Text, widget: text }
+          - name: addons
+            label: "Tillval (i beställningsformuläret)"
+            widget: list
+            field: { name: addon, label: Tillval, widget: string }
+          - name: faq
+            label: Vanliga frågor
+            widget: list
+            summary: "{{fields.question}}"
+            fields:
+              - { name: question, label: Fråga, widget: string }
+              - { name: answer, label: Svar, widget: text }
+          - name: about
+            label: Om oss
+            widget: object
+            fields:
+              - { name: title, label: Rubrik, widget: string }
+              - { name: text, label: Text, widget: markdown }
+              - name: people
+                label: Personer
+                widget: list
+                summary: "{{fields.name}}"
+                fields:
+                  - { name: name, label: Namn, widget: string }
+                  - { name: role, label: Roll, widget: string }
+                  - { name: image, label: Bild, widget: image, required: false }

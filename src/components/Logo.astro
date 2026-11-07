@@ -1,0 +1,17 @@
+---
+import settings from '../data/settings.json';
+
+interface Props { variant?: 'dark' | 'light' }
+// dark = för ljus bakgrund (standard), light = för mörk bakgrund (t.ex. footern)
+const { variant = 'dark' } = Astro.props;
+const src = variant === 'light' ? '/images/logo-light.png' : '/images/logo.png';
+---
+<a href="/" class="logo" aria-label={`${settings.companyName} – startsida`}>
+  <img src={src} alt={settings.companyName} width="543" height="96" />
+</a>
+
+<style>
+  .logo { display: inline-block; line-height: 0; }
+  .logo img { height: 34px; width: auto; }
+  @media (max-width: 480px) { .logo img { height: 28px; } }
+</style>

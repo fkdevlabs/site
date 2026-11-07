@@ -1,0 +1,71 @@
+---
+import Logo from './Logo.astro';
+
+const links = [
+  { href: '/#tjanster', label: 'Tjänster' },
+  { href: '/paket/', label: 'Paket & priser' },
+  { href: '/arbeten/', label: 'Kundcase' },
+  { href: '/om-oss/', label: 'Om oss' },
+];
+const path = Astro.url.pathname;
+---
+<header class="header">
+  <div class="container header__inner">
+    <Logo />
+    <button class="header__toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Meny">
+      <span></span><span></span>
+    </button>
+    <nav id="site-nav" class="header__nav">
+      <ul>
+        {links.map((l) => (
+          <li><a href={l.href} aria-current={!l.href.includes('#') && path.startsWith(l.href) ? 'page' : undefined}>{l.label}</a></li>
+        ))}
+      </ul>
+      <a href="/bestall/" class="btn btn--accent header__cta">Beställ hemsida <span class="arrow">→</span></a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.header__toggle');
+  const header = document.querySelector('.header');
+  const setOpen = (open: boolean) => {
+    btn?.setAttribute('aria-expanded', String(open));
+    header?.classList.toggle('is-open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
+  btn?.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
+  document.querySelectorAll('.header__nav a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+</script>
+
+<style>
+  .header { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--c-bg) 88%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--c-border); }
+  .header__inner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-height: 72px; }
+  .header__nav { display: flex; align-items: center; gap: 2rem; }
+  .header__nav ul { display: flex; gap: 1.75rem; list-style: none; margin: 0; padding: 0; }
+  .header__nav ul a { text-decoration: none; font-weight: 500; font-size: .96rem; color: var(--c-ink-2); position: relative; }
+  .header__nav ul a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 1.5px; background: var(--c-accent); transform: scaleX(0); transform-origin: left; transition: transform .2s; }
+  .header__nav ul a:hover::after, .header__nav ul a[aria-current='page']::after { transform: scaleX(1); }
+  .header__cta { padding: .75rem 1.2rem; font-size: .93rem; }
+  .header__toggle { display: none; }
+
+  @media (max-width: 880px) {
+    .header__toggle {
+      display: grid; place-content: center; gap: 6px; width: 44px; height: 44px; border-radius: 50%;
+      border: 1px solid var(--c-border); background: var(--c-paper); cursor: pointer;
+    }
+    .header__toggle span { display: block; width: 18px; height: 1.5px; background: var(--c-ink); transition: transform .2s; }
+    .is-open .header__toggle span:first-child { transform: translateY(3.75px) rotate(45deg); }
+    .is-open .header__toggle span:last-child { transform: translateY(-3.75px) rotate(-45deg); }
+    .header__nav {
+      position: fixed; inset: 73px 0 0; background: var(--c-bg); flex-direction: column; align-items: stretch;
+      padding: 1.5rem 1.25rem 2rem; gap: 2rem; opacity: 0; visibility: hidden; transition: opacity .2s, visibility .2s;
+    }
+    .is-open .header__nav { opacity: 1; visibility: visible; }
+    .header__nav ul { flex-direction: column; gap: 0; }
+    .header__nav ul a { display: block; padding: 1rem 0; border-bottom: 1px solid var(--c-border); font: 600 1.6rem/1.2 var(--f-head); letter-spacing: -0.02em; color: var(--c-ink); }
+    .header__nav ul a::after { display: none; }
+    .header__cta { padding: 1.1rem; font-size: 1rem; }
+  }
+</style>

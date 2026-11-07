@@ -1,0 +1,29 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props { item: CollectionEntry<'arbeten'>; large?: boolean }
+const { item, large = false } = Astro.props;
+const c = item.data;
+---
+<a href={`/arbeten/${item.id}/`} class:list={['case', { 'case--large': large }]}>
+  <div class="case__img">
+    <img src={c.image} alt={`Skärmdump av hemsidan för ${c.client}`} loading="lazy" width="1600" height="1000" />
+  </div>
+  <div class="case__body">
+    <p class="case__meta">{c.client} · {c.industry}</p>
+    <h3>{c.title}</h3>
+    <ul class="tags">{c.tags.slice(0, 4).map((t) => <li class="tag">{t}</li>)}</ul>
+  </div>
+</a>
+
+<style>
+  .case { display: block; text-decoration: none; color: inherit; }
+  .case__img { overflow: hidden; border-radius: var(--radius); border: 1px solid var(--c-border); background: var(--c-paper); aspect-ratio: 16 / 10; }
+  .case__img img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
+  .case:hover .case__img img { transform: scale(1.035); }
+  .case__body { padding: 1.25rem .25rem 0; }
+  .case__meta { margin: 0 0 .4rem; font-size: .88rem; color: var(--c-muted); }
+  .case h3 { margin-bottom: .9rem; transition: color .15s; }
+  .case--large h3 { font-size: clamp(1.4rem, 2.4vw, 1.9rem); }
+  .case:hover h3 { color: var(--c-accent-dark); }
+</style>

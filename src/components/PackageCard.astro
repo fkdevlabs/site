@@ -1,0 +1,63 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatPrice } from '../lib';
+
+interface Props { pkg: CollectionEntry<'paket'> }
+const { pkg } = Astro.props;
+const p = pkg.data;
+---
+<article class:list={['pkg', { 'pkg--popular': p.popular }]}>
+  {p.popular && <span class="pkg__badge">Populärast</span>}
+  <h3 class="pkg__title">{p.title}</h3>
+  <p class="pkg__tagline">{p.tagline}</p>
+  <p class="pkg__price">
+    {p.pricePrefix && <span class="pkg__prefix">{p.pricePrefix}</span>}
+    <strong>{formatPrice(p.price)}</strong> <span>kr</span>
+    <small>{p.priceSuffix}</small>
+  </p>
+  {(p.monthly || p.delivery) && (
+    <dl class="pkg__meta">
+      {p.monthly && <div><dt>Drift</dt><dd>{formatPrice(p.monthly)} kr/mån</dd></div>}
+      {p.delivery && <div><dt>Leverans</dt><dd>{p.delivery}</dd></div>}
+    </dl>
+  )}
+  <ul class="pkg__features">
+    {p.features.map((f) => <li>{f}</li>)}
+  </ul>
+  <a href={`/bestall/?paket=${pkg.id}`} class:list={['btn', p.popular ? 'btn--accent' : 'btn--outline']}>
+    {p.buttonText} <span class="arrow">→</span>
+  </a>
+</article>
+
+<style>
+  .pkg {
+    position: relative; display: flex; flex-direction: column; padding: 2rem; border-radius: var(--radius);
+    background: var(--c-paper); border: 1px solid var(--c-border); transition: transform .2s, box-shadow .2s;
+  }
+  .pkg:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .pkg--popular { background: var(--c-dark); color: var(--c-on-dark); border-color: var(--c-dark); }
+  .pkg--popular .pkg__tagline, .pkg--popular small, .pkg--popular dt { color: var(--c-on-dark-muted); }
+  .pkg--popular .pkg__meta, .pkg--popular .pkg__features li { border-color: var(--c-dark-border); }
+  .pkg__badge {
+    position: absolute; top: 1.5rem; right: 1.5rem; padding: .4rem .75rem; border-radius: 999px;
+    background: var(--c-accent); color: var(--c-on-accent); font: 600 .75rem/1 var(--f-body); letter-spacing: .04em;
+  }
+  .pkg__title { font-size: 1.6rem; margin-bottom: .35rem; }
+  .pkg__tagline { color: var(--c-muted); margin: 0 0 1.75rem; min-height: 3.2em; }
+  .pkg__price { margin: 0 0 1.25rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem; }
+  .pkg__price strong { font: 600 clamp(2.4rem, 4vw, 3rem)/1 var(--f-head); letter-spacing: -0.04em; }
+  .pkg__price span { font-weight: 600; }
+  .pkg__price small { flex-basis: 100%; color: var(--c-muted); font-size: .85rem; }
+  .pkg__prefix { font-family: var(--f-serif); font-style: italic; font-weight: 400 !important; font-size: 1.2rem; }
+  .pkg__meta { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 0 0 1.25rem; padding: 1rem 0; border-block: 1px solid var(--c-border); }
+  .pkg__meta dt { font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; color: var(--c-muted); }
+  .pkg__meta dd { margin: 0; font-weight: 600; }
+  .pkg__features { list-style: none; padding: 0; margin: 0 0 2rem; flex: 1; }
+  .pkg__features li { padding: .6rem 0 .6rem 1.9rem; position: relative; border-bottom: 1px dashed var(--c-border); font-size: .97rem; }
+  .pkg__features li:last-child { border-bottom: 0; }
+  .pkg__features li::before {
+    content: ''; position: absolute; left: 0; top: .85rem; width: 1.1rem; height: 1.1rem; border-radius: 50%;
+    background: var(--c-accent-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b6a99' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E") center / 65% no-repeat;
+  }
+  .pkg--popular .btn--accent:hover { background: var(--c-bg); border-color: var(--c-bg); color: var(--c-ink); }
+</style>

@@ -1,0 +1,53 @@
+---
+import settings from '../data/settings.json';
+import Logo from './Logo.astro';
+const year = new Date().getFullYear();
+const tel = settings.phone.replace(/[^\d+]/g, '');
+---
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <p class="footer__big">Redo för en hemsida som <em class="serif">jobbar åt er?</em></p>
+      <a href="/bestall/" class="btn btn--accent">Beställ nu <span class="arrow">→</span></a>
+    </div>
+    <div class="footer__grid">
+      <div>
+        <Logo variant="light" />
+        <p class="footer__muted">{settings.tagline}</p>
+      </div>
+      <div>
+        <h3>Kontakt</h3>
+        <ul>
+          <li><a href={`mailto:${settings.email}`}>{settings.email}</a></li>
+          <li><a href={`tel:${tel}`}>{settings.phone}</a></li>
+          <li class="footer__muted">{settings.city}</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Sidor</h3>
+        <ul>
+          <li><a href="/paket/">Paket & priser</a></li>
+          <li><a href="/arbeten/">Kundcase</a></li>
+          <li><a href="/om-oss/">Om oss</a></li>
+          <li><a href="/bestall/">Beställ</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="footer__legal">© {year} {settings.companyName} · Org.nr {settings.orgNumber}</p>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--c-dark); color: var(--c-on-dark); padding: clamp(3.5rem, 8vw, 6rem) 0 2rem; }
+  .footer__top { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 2rem; padding-bottom: clamp(2.5rem, 6vw, 4rem); border-bottom: 1px solid var(--c-dark-border); }
+  .footer__big { font: 600 clamp(2rem, 5vw, 3.8rem)/1.02 var(--f-head); letter-spacing: -0.035em; margin: 0; max-width: 18ch; }
+  .footer__big em { color: var(--c-accent); }
+  .footer__grid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); padding: 2.5rem 0; }
+  .footer h3 { font: 600 .78rem/1 var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--c-on-dark-muted); margin-bottom: 1rem; }
+  .footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+  .footer a { text-decoration: none; }
+  .footer ul a:hover { color: var(--c-accent); }
+  .footer__muted { color: var(--c-on-dark-muted); max-width: 32ch; }
+  .footer__legal { font-size: .85rem; color: var(--c-on-dark-muted); margin: 0; padding-top: 1.5rem; border-top: 1px solid var(--c-dark-border); }
+  .footer__grid > div:first-child p { margin-top: 1.25rem; }
+</style>

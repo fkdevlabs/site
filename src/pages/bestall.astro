@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import OrderForm from '../components/OrderForm.astro';
+import settings from '../data/settings.json';
+const tel = settings.phone.replace(/[^\d+]/g, '');
+---
+<Base title="Beställ hemsida" description="Beställ en ny hemsida. Välj paket, berätta om er verksamhet, så återkommer vi med en offert inom 24 timmar.">
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Beställ</span>
+      <h1>Låt oss bygga <em>er nya sajt</em></h1>
+      <p class="lead">Fyll i formuläret, det tar ungefär två minuter. Vi återkommer inom 24 timmar med frågor och en skriftlig offert. Inget är bindande förrän ni har godkänt offerten.</p>
+    </div>
+  </section>
+  <section class="section" style="padding-top:0">
+    <div class="container order-wrap">
+      <div class="card order-card"><OrderForm /></div>
+      <aside class="order-aside">
+        <h2>Vad händer sen?</h2>
+        <ol>
+          {settings.steps.map((s) => <li><b>{s.title}</b><span>{s.text}</span></li>)}
+        </ol>
+        <div class="order-contact">
+          <p>Hellre prata direkt?</p>
+          <a href={`tel:${tel}`}>{settings.phone}</a>
+          <a href={`mailto:${settings.email}`}>{settings.email}</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .order-wrap { display: grid; grid-template-columns: 1.7fr 1fr; gap: clamp(1.5rem, 4vw, 3.5rem); align-items: start; }
+  .order-card { padding: clamp(1.5rem, 4vw, 2.75rem); }
+  .order-aside { position: sticky; top: 100px; }
+  .order-aside h2 { font-size: 1.5rem; }
+  .order-aside ol { list-style: none; padding: 0; margin: 0 0 2rem; counter-reset: s; }
+  .order-aside li { counter-increment: s; display: grid; grid-template-columns: 2rem 1fr; column-gap: .75rem; padding: 1rem 0; border-bottom: 1px solid var(--c-border); }
+  .order-aside li::before { content: counter(s); grid-row: span 2; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; border: 1.5px solid var(--c-ink); font-weight: 600; font-size: .9rem; }
+  .order-aside li span { color: var(--c-muted); font-size: .95rem; }
+  .order-contact { padding: 1.5rem; border-radius: var(--radius); background: var(--c-dark); color: var(--c-on-dark); display: grid; gap: .35rem; }
+  .order-contact p { margin: 0 0 .25rem; color: var(--c-on-dark-muted); }
+  .order-contact a { text-decoration: none; font: 600 1.2rem/1.4 var(--f-head); }
+  .order-contact a:hover { color: var(--c-accent); }
+  @media (max-width: 900px) { .order-wrap { grid-template-columns: 1fr; } .order-aside { position: static; } }
+</style>

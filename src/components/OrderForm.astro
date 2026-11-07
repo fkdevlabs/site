@@ -1,0 +1,124 @@
+---
+import { getCollection } from 'astro:content';
+import settings from '../data/settings.json';
+import { formatPrice } from '../lib';
+
+const packages = (await getCollection('paket')).sort((a, b) => a.data.order - b.data.order);
+const defaultPkg = packages.find((p) => p.data.popular) ?? packages[0];
+---
+<!-- Netlify Forms: formuläret upptäcks automatiskt vid deploy. Svar hittas under Site → Forms i Netlify. -->
+<form name="bestallning" method="POST" action="/tack/" data-netlify="true" netlify-honeypot="bot-field" class="order">
+  <input type="hidden" name="form-name" value="bestallning" />
+  <p hidden><label>Fyll inte i detta: <input name="bot-field" /></label></p>
+
+  <fieldset>
+    <legend><span>1</span> Välj paket</legend>
+    <div class="order__pkgs">
+      {packages.map((p) => (
+        <label class="order__pkg">
+          <input type="radio" name="paket" value={p.data.title} data-slug={p.id} checked={p.id === defaultPkg?.id} />
+          <span class="order__pkg-box">
+            <b>{p.data.title}</b>
+            <small>{p.data.pricePrefix ? `${p.data.pricePrefix} ` : ''}{formatPrice(p.data.price)} kr</small>
+          </span>
+        </label>
+      ))}
+      <label class="order__pkg">
+        <input type="radio" name="paket" value="Vet inte än – vill ha rådgivning" data-slug="radgivning" />
+        <span class="order__pkg-box"><b>Vet inte än</b><small>Vi hjälper er välja</small></span>
+      </label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend><span>2</span> Tillval <em>(valfritt)</em></legend>
+    <div class="order__chips">
+      {settings.addons.map((a) => (
+        <label class="order__chip"><input type="checkbox" name="tillval[]" value={a} /><span>{a}</span></label>
+      ))}
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend><span>3</span> Om er</legend>
+    <div class="order__row">
+      <label>Namn *<input type="text" name="namn" required autocomplete="name" /></label>
+      <label>Företag *<input type="text" name="foretag" required autocomplete="organization" /></label>
+    </div>
+    <div class="order__row">
+      <label>E-post *<input type="email" name="epost" required autocomplete="email" /></label>
+      <label>Telefon<input type="tel" name="telefon" autocomplete="tel" /></label>
+    </div>
+    <div class="order__row">
+      <label>Nuvarande hemsida<input type="text" name="nuvarande-sajt" placeholder="www.exempel.se" inputmode="url" /></label>
+      <label>När vill ni vara live?
+        <select name="lansering">
+          <option>Så snart som möjligt</option>
+          <option>Inom 1 månad</option>
+          <option>Inom 1–3 månader</option>
+          <option>Inget brådskande</option>
+        </select>
+      </label>
+    </div>
+    <label>Berätta kort om er verksamhet och vad sajten ska göra<textarea name="meddelande" rows="5" placeholder="Vi är ett måleriföretag i … och vill få fler offertförfrågningar via nätet."></textarea></label>
+  </fieldset>
+
+  <label class="order__consent"><input type="checkbox" name="samtycke" required /> Jag godkänner att mina uppgifter sparas för att ni ska kunna återkomma om min beställning.</label>
+  <div class="order__submit">
+    <button type="submit" class="btn btn--accent">Skicka beställning <span class="arrow">→</span></button>
+    <p>Helt kostnadsfritt och inte bindande. Vi återkommer inom 24 timmar med en offert.</p>
+  </div>
+</form>
+
+<script is:inline>
+  // Förvälj paket via ?paket=slug
+  (function () {
+    var slug = new URLSearchParams(location.search).get('paket');
+    if (!slug) return;
+    var input = document.querySelector('.order input[name="paket"][data-slug="' + CSS.escape(slug) + '"]');
+    if (input) input.checked = true;
+  })();
+</script>
+
+<style>
+  .order { display: grid; gap: 2.25rem; }
+  .order fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 1rem; min-width: 0; }
+  .order legend { display: flex; align-items: center; gap: .7rem; font: 600 1.3rem/1.2 var(--f-head); letter-spacing: -0.02em; margin-bottom: 1rem; padding: 0; }
+  .order legend span { display: grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 50%; background: var(--c-ink); color: var(--c-bg); font-size: .9rem; }
+  .order legend em { font: 400 .95rem var(--f-body); color: var(--c-muted); font-style: normal; }
+
+  .order__pkgs { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+  .order__pkg input, .order__chip input { position: absolute; opacity: 0; pointer-events: none; }
+  .order__pkg-box {
+    display: flex; flex-direction: column; gap: .25rem; height: 100%; padding: 1rem 1.1rem; border-radius: var(--radius-sm);
+    border: 1.5px solid var(--c-border); background: var(--c-paper); cursor: pointer; transition: border-color .15s, background .15s;
+  }
+  .order__pkg-box b { font: 600 1.1rem/1.2 var(--f-head); }
+  .order__pkg-box small { color: var(--c-muted); }
+  .order__pkg:hover .order__pkg-box { border-color: var(--c-ink); }
+  .order__pkg input:checked + .order__pkg-box { border-color: var(--c-accent); background: var(--c-accent-soft); box-shadow: inset 0 0 0 1px var(--c-accent); }
+  .order__pkg input:focus-visible + .order__pkg-box, .order__chip input:focus-visible + span { outline: 2px solid var(--c-accent); outline-offset: 2px; }
+
+  .order__chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .order__chip span {
+    display: inline-block; padding: .6rem 1rem; border-radius: 999px; border: 1.5px solid var(--c-border);
+    background: var(--c-paper); cursor: pointer; font-size: .93rem; font-weight: 500; transition: all .15s;
+  }
+  .order__chip:hover span { border-color: var(--c-ink); }
+  .order__chip input:checked + span { background: var(--c-ink); border-color: var(--c-ink); color: var(--c-bg); }
+  .order__chip input:checked + span::before { content: '✓ '; color: var(--c-accent); }
+
+  .order__row { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+  .order label:not(.order__pkg):not(.order__chip):not(.order__consent) { display: flex; flex-direction: column; gap: .4rem; font-weight: 500; font-size: .95rem; }
+  .order input:not([type='checkbox']):not([type='radio']), .order select, .order textarea {
+    font: inherit; padding: .8rem .9rem; border: 1.5px solid var(--c-border); border-radius: var(--radius-sm);
+    background: var(--c-paper); color: var(--c-ink); transition: border-color .15s;
+  }
+  .order input:hover, .order select:hover, .order textarea:hover { border-color: var(--c-border-strong); }
+  .order input:focus, .order select:focus, .order textarea:focus { outline: none; border-color: var(--c-accent); }
+  .order textarea { resize: vertical; }
+  .order__consent { display: flex; align-items: flex-start; gap: .6rem; color: var(--c-muted); font-size: .93rem; }
+  .order__consent input { margin-top: .25rem; accent-color: var(--c-accent); width: 1.05rem; height: 1.05rem; flex-shrink: 0; }
+  .order__submit { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
+  .order__submit p { margin: 0; color: var(--c-muted); font-size: .9rem; max-width: 36ch; }
+</style>

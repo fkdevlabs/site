@@ -1,0 +1,124 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/space-grotesk';
+@import '@fontsource/instrument-serif/400-italic.css';
+
+:root {
+  /* Färger hämtade från loggan: blå #6fc0e4, svart #212527, grå #767c82 */
+  --c-bg: #f3f6f8;
+  --c-paper: #ffffff;
+  --c-ink: #212527;
+  --c-ink-2: #3a4044;
+  --c-muted: #626a70;
+  --c-gray: #767c82;
+  --c-border: #dbe3e8;
+  --c-border-strong: #b9c4cc;
+  --c-accent: #6fc0e4;
+  --c-accent-hover: #93d2ee;
+  --c-accent-text: #2a86bd; /* blå för stor text på ljus bakgrund */
+  --c-accent-dark: #1b6a99; /* blå för brödtext/länkar på ljus bakgrund */
+  --c-accent-soft: #e2f2fa;
+  --c-on-accent: #212527;
+  --c-dark: #1d2124;
+  --c-dark-border: #353b40;
+  --c-on-dark: #eef2f5;
+  --c-on-dark-muted: #9aa3aa;
+
+  --radius: 20px;
+  --radius-sm: 12px;
+  --shadow: 0 1px 2px rgba(33, 37, 39, .05), 0 12px 32px rgba(33, 37, 39, .08);
+  --max: 1200px;
+  --f-head: 'Space Grotesk Variable', system-ui, sans-serif;
+  --f-body: 'Inter Variable', system-ui, sans-serif;
+  --f-serif: 'Instrument Serif', Georgia, serif;
+
+  font-family: var(--f-body);
+  color: var(--c-ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--c-bg); overflow-x: hidden; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+::selection { background: var(--c-accent); color: var(--c-on-accent); }
+
+h1, h2, h3 { font-family: var(--f-head); line-height: 1.02; letter-spacing: -0.035em; margin: 0 0 .5em; font-weight: 600; }
+h1 { font-size: clamp(2.6rem, 7vw, 5.6rem); }
+h2 { font-size: clamp(2rem, 4.5vw, 3.4rem); }
+h3 { font-size: 1.3rem; letter-spacing: -0.02em; line-height: 1.15; }
+.serif, h1 em, h2 em { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+h1 em, h2 em { color: var(--c-accent-text); }
+.section--dark h1 em, .section--dark h2 em { color: var(--c-accent); }
+
+.container { width: min(100% - 2.5rem, var(--max)); margin-inline: auto; }
+.section { padding: clamp(4rem, 9vw, 7.5rem) 0; }
+.section--paper { background: var(--c-paper); border-block: 1px solid var(--c-border); }
+.section--dark { background: var(--c-dark); color: var(--c-on-dark); }
+.section--dark .lead { color: var(--c-on-dark-muted); }
+.section__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+.section__head h2 { margin: 0; max-width: 16ch; }
+.section__head .lead { margin: 0; max-width: 42ch; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: .55rem; font: 600 .78rem/1 var(--f-body);
+  letter-spacing: .14em; text-transform: uppercase; color: var(--c-muted); margin-bottom: 1.1rem;
+}
+.eyebrow::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--c-accent); }
+.lead { font-size: clamp(1.05rem, 1.6vw, 1.2rem); color: var(--c-muted); max-width: 58ch; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .6rem; padding: 1rem 1.6rem; border-radius: 999px;
+  background: var(--c-ink); color: var(--c-bg); text-decoration: none; border: 1.5px solid var(--c-ink);
+  cursor: pointer; font: 600 1rem/1 var(--f-body); transition: transform .15s, background .15s, color .15s, border-color .15s;
+}
+.btn:hover { background: var(--c-accent); border-color: var(--c-accent); color: var(--c-on-accent); transform: translateY(-2px); }
+.btn--accent { background: var(--c-accent); border-color: var(--c-accent); color: var(--c-on-accent); }
+.btn--accent:hover { background: var(--c-accent-hover); border-color: var(--c-accent-hover); }
+.btn--outline { background: transparent; color: var(--c-ink); }
+.btn--outline:hover { background: var(--c-ink); border-color: var(--c-ink); color: var(--c-bg); }
+.btn--light { background: var(--c-bg); border-color: var(--c-bg); color: var(--c-ink); }
+.btn--light:hover { background: var(--c-accent); border-color: var(--c-accent); color: var(--c-on-accent); }
+.btn .arrow { transition: transform .15s; }
+.btn:hover .arrow { transform: translateX(3px); }
+
+.grid { display: grid; gap: 1.25rem; }
+.grid--2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
+.grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+
+.card { background: var(--c-paper); border: 1px solid var(--c-border); border-radius: var(--radius); }
+
+.tag {
+  display: inline-block; padding: .35rem .7rem; border-radius: 999px; border: 1px solid var(--c-border);
+  font-size: .8rem; font-weight: 500; color: var(--c-ink-2); background: var(--c-bg);
+}
+.tags { display: flex; flex-wrap: wrap; gap: .4rem; padding: 0; margin: 0; list-style: none; }
+
+.prose { max-width: 68ch; font-size: 1.08rem; }
+.prose p { margin: 0 0 1.1em; }
+.prose h2 { font-size: 1.8rem; margin-top: 1.6em; }
+.prose a { color: var(--c-accent-dark); }
+
+/* Sidhuvud på undersidor */
+.page-hero { padding: clamp(3.5rem, 8vw, 6rem) 0 clamp(2rem, 4vw, 3rem); }
+.page-hero h1 { font-size: clamp(2.4rem, 6vw, 4.6rem); max-width: 16ch; }
+
+/* FAQ */
+.faq { display: grid; gap: clamp(2rem, 5vw, 4rem); grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); align-items: start; }
+.faq__list { border-top: 1px solid var(--c-border); }
+.faq details { border-bottom: 1px solid var(--c-border); }
+.faq summary {
+  list-style: none; cursor: pointer; padding: 1.3rem 0; display: flex; justify-content: space-between; gap: 1rem;
+  font: 600 1.12rem/1.3 var(--f-head); letter-spacing: -0.01em;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: '+'; font: 400 1.6rem/1 var(--f-body); color: var(--c-accent-text);transition: transform .2s; }
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq details p { margin: 0 0 1.4rem; color: var(--c-muted); max-width: 60ch; }
+
+:focus-visible { outline: 2px solid var(--c-accent); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

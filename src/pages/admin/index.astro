@@ -1,0 +1,30 @@
+---
+// Decap CMS admin. Ligger i src/pages (inte public/) så att /admin/ även fungerar i `astro dev`,
+// och så att förhandsvisningen kan använda sajtens riktiga CSS. CMS-konfigurationen finns i public/admin/config.yml.
+---
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Innehållshantering – FK Dev Labs</title>
+    <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  </head>
+  <body>
+    <script is:inline>window.CMS_MANUAL_INIT = true;</script>
+    <script is:inline src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script>
+      import globalCss from '../../styles/global.css?inline';
+
+      const CMS = (window as any).CMS;
+      CMS.registerPreviewStyle(globalCss, { raw: true });
+      CMS.registerPreviewStyle('body { padding: 2rem; }', { raw: true });
+
+      // Lokalt (`npm run cms`) skriver decap-server direkt till filerna och klarar inte
+      // utkast-/granskningsflödet, så publicera direkt när vi kör på localhost.
+      const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname);
+      CMS.init(isLocal ? { config: { publish_mode: 'simple' } } : {});
+    </script>
+  </body>
+</html>

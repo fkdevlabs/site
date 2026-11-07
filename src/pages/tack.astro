@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Tack för er beställning">
+  <section class="section">
+    <div class="container" style="text-align:center; max-width:680px">
+      <div class="check" aria-hidden="true">✓</div>
+      <h1 style="font-size:clamp(2.4rem,6vw,4rem)">Tack, vi har fått <em>er beställning!</em></h1>
+      <p class="lead" style="margin-inline:auto">Vi går igenom uppgifterna och hör av oss inom 24 timmar, oftast snabbare. Håll utkik i inkorgen (och skräpposten).</p>
+      <p style="margin-top:2rem"><a href="/arbeten/" class="btn btn--outline">Kolla in våra kundcase under tiden</a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .check { width: 72px; height: 72px; margin: 0 auto 2rem; border-radius: 50%; display: grid; place-items: center; background: var(--c-accent); color: var(--c-on-accent); font-size: 2rem; font-weight: 700; }
+</style>

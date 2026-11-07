@@ -1,0 +1,141 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PackageCard from '../components/PackageCard.astro';
+import CaseCard from '../components/CaseCard.astro';
+import settings from '../data/settings.json';
+import { splitHighlight, serviceIcons } from '../lib';
+import '../styles/home.css';
+
+const packages = (await getCollection('paket')).sort((a, b) => a.data.order - b.data.order);
+const cases = (await getCollection('arbeten', (c) => c.data.featured)).sort((a, b) => a.data.order - b.data.order).slice(0, 4);
+const { hero } = settings;
+const [before, hl, after] = splitHighlight(hero.title, hero.highlight);
+---
+<Base>
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__text">
+        {hero.eyebrow && <span class="eyebrow">{hero.eyebrow}</span>}
+        <h1>{before}{hl && <em>{hl}</em>}{after}</h1>
+        <p class="lead">{hero.text}</p>
+        <div class="hero__actions">
+          <a href="/bestall/" class="btn btn--accent">{hero.buttonText} <span class="arrow">→</span></a>
+          <a href="/paket/" class="btn btn--outline">Se paket & priser</a>
+        </div>
+      </div>
+
+      <div class="hero__visual" aria-hidden="true">
+        <div class="mock">
+          <div class="mock__bar"><i></i><i></i><i></i><span>ert-foretag.se</span></div>
+          <div class="mock__page">
+            <div class="mock__nav"><b></b><span></span><span></span><span></span><em></em></div>
+            <div class="mock__hero">
+              <div class="mock__lines"><s style="width:85%"></s><s style="width:60%"></s><p></p><p style="width:70%"></p><u></u></div>
+              <div class="mock__img"></div>
+            </div>
+            <div class="mock__cards"><div></div><div></div><div></div></div>
+          </div>
+        </div>
+        <div class="toast toast--1">
+          <span class="toast__dot"></span>
+          <div><b>Ny offertförfrågan</b><small>Anna L. · Badrumsrenovering</small></div>
+        </div>
+        <div class="toast toast--2">
+          <span class="toast__score">100</span>
+          <div><b>Prestanda</b><small>Laddar på 0,6 s</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <dl class="stats">
+        {settings.stats.map((s) => <div><dt>{s.value}</dt><dd>{s.label}</dd></div>)}
+      </dl>
+    </div>
+  </section>
+
+  <section class="section section--paper" id="tjanster">
+    <div class="container">
+      <div class="section__head">
+        <div>
+          <span class="eyebrow">Det här gör vi</span>
+          <h2>Allt ni behöver för att <em>synas och sälja</em> på nätet</h2>
+        </div>
+        <p class="lead">Ni fokuserar på er verksamhet. Vi tar hand om design, teknik, Google och drift, och ser till att ni själva kan uppdatera innehållet.</p>
+      </div>
+      <div class="services">
+        {settings.services.map((s, i) => (
+          <article class="service">
+            <span class="service__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={serviceIcons[i % serviceIcons.length]} />
+            </span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {cases.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <div class="section__head">
+          <div>
+            <span class="eyebrow">Kundcase</span>
+            <h2>Sajter vi har <em>byggt</em></h2>
+          </div>
+          <a href="/arbeten/" class="btn btn--outline">Alla kundcase <span class="arrow">→</span></a>
+        </div>
+        <div class="grid grid--2 cases">
+          {cases.map((c) => <CaseCard item={c} large />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section__head">
+        <div>
+          <span class="eyebrow">Paket & priser</span>
+          <h2>Fasta priser. <em>Inga överraskningar.</em></h2>
+        </div>
+        <p class="lead">Välj det paket som passar er. Osäker? Kryssa i ”Vet inte än” i beställningen, så hjälper vi er välja.</p>
+      </div>
+      <div class="grid grid--3">
+        {packages.map((p) => <PackageCard pkg={p} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark">
+    <div class="container">
+      <div class="section__head">
+        <div>
+          <span class="eyebrow">Så går det till</span>
+          <h2>Från beställning till <em>live</em> på några veckor</h2>
+        </div>
+      </div>
+      <ol class="steps">
+        {settings.steps.map((s) => <li><h3>{s.title}</h3><p>{s.text}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container faq">
+      <div>
+        <span class="eyebrow">FAQ</span>
+        <h2>Vanliga frågor</h2>
+        <p class="lead">Hittar ni inte svaret? Mejla <a href={`mailto:${settings.email}`}>{settings.email}</a>.</p>
+      </div>
+      <div class="faq__list">
+        {settings.faq.map((f) => (
+          <details><summary>{f.question}</summary><p>{f.answer}</p></details>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

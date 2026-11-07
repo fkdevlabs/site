@@ -1,0 +1,62 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PackageCard from '../../components/PackageCard.astro';
+import settings from '../../data/settings.json';
+
+const packages = (await getCollection('paket')).sort((a, b) => a.data.order - b.data.order);
+const details = await Promise.all(packages.map(async (p) => ({ p, Content: (await render(p)).Content })));
+---
+<Base title="Paket & priser" description="Fasta priser på hemsidor för småföretag. Välj paket och beställ direkt.">
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Paket & priser</span>
+      <h1>Välj paket, <em>vi gör resten</em></h1>
+      <p class="lead">Alla paket har fast pris, mobilanpassad design och snabb laddning. Driften täcker hosting, säkerhet och support, och kan sägas upp med en månads varsel.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container grid grid--3">
+      {packages.map((p) => <PackageCard pkg={p} />)}
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section__head"><h2>Vilket paket <em>passar er?</em></h2></div>
+      <div class="pkg-details">
+        {details.map(({ p, Content }) => (
+          <div class="pkg-detail">
+            <h3>{p.data.title}</h3>
+            <div class="prose"><Content /></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section__head">
+        <div>
+          <span class="eyebrow">Tillval</span>
+          <h2>Lägg till det <em>ni behöver</em></h2>
+        </div>
+        <p class="lead">Kryssa i tillvalen i beställningen, så får ni ett pris i offerten.</p>
+      </div>
+      <ul class="tags addons">{settings.addons.map((a) => <li class="tag">{a}</li>)}</ul>
+      <p style="margin-top:2.5rem"><a href="/bestall/" class="btn btn--accent">Gå till beställning <span class="arrow">→</span></a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .pkg-details { display: grid; gap: 0; border-top: 1px solid var(--c-border); }
+  .pkg-detail { display: grid; grid-template-columns: minmax(140px, 1fr) 3fr; gap: 1rem 2rem; padding: 1.75rem 0; border-bottom: 1px solid var(--c-border); }
+  .pkg-detail h3 { font-size: 1.6rem; }
+  .pkg-detail .prose { color: var(--c-muted); }
+  .pkg-detail .prose :global(p:last-child) { margin-bottom: 0; }
+  @media (max-width: 640px) { .pkg-detail { grid-template-columns: 1fr; } }
+  .addons .tag { font-size: 1rem; padding: .7rem 1.2rem; background: var(--c-paper); }
+</style>

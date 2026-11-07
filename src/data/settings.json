@@ -1,0 +1,58 @@
+{
+  "companyName": "FK Dev Labs",
+  "tagline": "Snabba, snygga hemsidor som ger småföretag fler kunder",
+  "phone": "070-000 00 00",
+  "email": "hej@fkdevlab.se",
+  "city": "Hela Sverige, på distans",
+  "orgNumber": "000000-0000",
+  "hero": {
+    "eyebrow": "Webbyrå för småföretag",
+    "title": "En hemsida som faktiskt drar in kunder",
+    "highlight": "drar in kunder",
+    "text": "Vi bygger snabba, mobilvänliga sajter till fast pris. Ni uppdaterar själva texter, bilder och produkter, utan att ringa oss varje gång.",
+    "buttonText": "Beställ er hemsida"
+  },
+  "stats": [
+    { "value": "2–4 v", "label": "från start till lansering" },
+    { "value": "100", "label": "i Lighthouse-poäng som mål" },
+    { "value": "Fast", "label": "pris, inga överraskningar" }
+  ],
+  "services": [
+    { "title": "Ny hemsida", "text": "Design och utveckling från grunden, anpassad efter er verksamhet och era kunder." },
+    { "title": "Redigera själv", "text": "Ett enkelt adminverktyg där ni ändrar texter, bilder, priser och produkter på egen hand." },
+    { "title": "Synas på Google", "text": "Teknisk SEO, snabb laddning och rätt struktur från dag ett, så att kunderna hittar er." },
+    { "title": "Formulär som säljer", "text": "Offert- och kontaktformulär som skickar förfrågningar direkt till er inkorg." },
+    { "title": "Hosting & drift", "text": "Vi sköter domän, SSL, säkerhet och uppdateringar. Sajten bara fungerar." },
+    { "title": "Löpande hjälp", "text": "Behöver ni en ny sida eller funktion senare? Hör av er, så fixar vi det." }
+  ],
+  "steps": [
+    { "title": "Beställ", "text": "Välj paket och berätta kort om er verksamhet i formuläret." },
+    { "title": "Uppstartssamtal", "text": "Vi går igenom mål, innehåll och stil på ett 30 minuters möte." },
+    { "title": "Design & bygge", "text": "Ni får en förhandsvisning att tycka till om, och vi justerar tills det sitter." },
+    { "title": "Lansering", "text": "Sajten går live, och ni får en genomgång av hur ni redigerar själva." }
+  ],
+  "addons": [
+    "Texter skrivna av oss",
+    "Fotografering / bildval",
+    "Logotyp & grafisk profil",
+    "Flera språk",
+    "Bokningssystem",
+    "Webbshop",
+    "Flytt från befintlig sajt"
+  ],
+  "faq": [
+    { "question": "Vad kostar en hemsida?", "answer": "Det beror på omfattningen, men de flesta av våra kunder hamnar i något av våra fasta paket. Ni ser priserna direkt på sidan, och vi skickar alltid en skriftlig offert innan vi börjar." },
+    { "question": "Kan vi uppdatera hemsidan själva?", "answer": "Ja. Alla sajter levereras med ett enkelt adminverktyg där ni loggar in och ändrar texter, bilder, priser och produkter. Ingen kod behövs." },
+    { "question": "Hur lång tid tar det?", "answer": "En vanlig företagssajt tar 2–4 veckor från uppstartssamtal till lansering. Det mesta beror på hur snabbt texter och bilder kommer på plats." },
+    { "question": "Vad ingår i månadskostnaden?", "answer": "Hosting, SSL-certifikat, säkerhetskopior, tekniska uppdateringar och support via e-post. Ni kan säga upp med en månads varsel." },
+    { "question": "Vi har redan en hemsida. Kan ni flytta den?", "answer": "Absolut. Vi flyttar över innehållet, sätter upp omdirigeringar så att ni inte tappar Google-placeringar, och tar hand om domänflytten." }
+  ],
+  "about": {
+    "title": "En liten byrå med kort väg till beslut",
+    "text": "FK Dev Labs är en liten webbyrå som bygger hemsidor för småföretag. När ni hör av er pratar ni direkt med personen som bygger sajten, inte med en säljare.\n\nVi bygger med modern teknik som gör sajterna snabba, säkra och billiga att drifta, och vi lämnar över dem så att ni kan sköta innehållet själva.",
+    "people": [
+      { "name": "Felix Holmberg", "role": "Grundare & utvecklare" },
+      { "name": "Kevin Mattsson", "role": "Grundare & designer", "image": "/images/kevin-mattsson.webp" }
+    ]
+  }
+}
